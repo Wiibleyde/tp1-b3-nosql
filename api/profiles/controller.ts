@@ -2,12 +2,12 @@ import type { Request, Response } from "express";
 import { User } from "./model";
 
 export async function getProfiles(req: Request, res: Response) {
-    const profiles = await User.find({ deleted: { $ne: true } });
+    const profiles = await User.find({ deleted: { $ne: true } }).populate('friends', 'name email _id');
     res.json(profiles);
 }
 
 export async function getProfileById(req: Request, res: Response) {
-    const profile = await User.findById(req.params.id);
+    const profile = await User.findById(req.params.id).populate('friends', 'name email _id');
     if (!profile) {
         res.status(404).send('Profile not found');
         return
