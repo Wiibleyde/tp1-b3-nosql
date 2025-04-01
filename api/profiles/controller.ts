@@ -2,12 +2,21 @@ import type { Request, Response } from "express";
 import { User } from "./model";
 
 export async function getProfiles(req: Request, res: Response) {
-    const profiles = await User.find({ deleted: { $ne: true } }).populate('friends', 'name email _id');
+    const profiles = await User.find({ deleted: { $ne: true } })
+        .populate('experience', 'titre entreprise dates description')
+        .populate('skills', 'skill')
+        .populate('information', 'bio localisation website')
+        .populate('friends', 'name email _id');
     res.json(profiles);
 }
 
 export async function getProfileById(req: Request, res: Response) {
-    const profile = await User.findById(req.params.id).populate('friends', 'name email _id');
+    const profile = await User.findById(req.params.id)
+        .where('deleted').ne(true)
+        .populate('experience', 'titre entreprise dates description')
+        .populate('skills', 'skill')
+        .populate('information', 'bio localisation website')
+        .populate('friends', 'name email _id');
     if (!profile) {
         res.status(404).send('Profile not found');
         return
@@ -33,7 +42,7 @@ export async function updateProfile(req: Request, res: Response) {
 }
 
 export async function deleteProfile(req: Request, res: Response) {
-    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    const deletedUser = await User.findByIdAndUpdate(req.params.id, { deleted: true }, { new: true });
     if (!deletedUser) {
         res.status(404).send('Profile not found');
         return

@@ -13,3 +13,8 @@ bun run index.ts
 ```
 
 This project was created using `bun init` in bun v1.2.2. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+
+Configuration files:
+- `.env` - Environment variables:
+  - `DB_URL` - URL to the database
+  - `PORT` - Port to run the server on

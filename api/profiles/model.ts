@@ -40,6 +40,11 @@ const userSchema = new mongoose.Schema({
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
         required: false,
     },
+    // soft-delete
+    deleted: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 export const User = mongoose.model('User', userSchema);
