@@ -53,7 +53,7 @@ export async function deleteProfile(req: Request, res: Response) {
 export async function addExperience(req: Request, res: Response) {
     const { titre, entreprise, dates, description } = req.body;
     const newExperience = { titre, entreprise, dates, description };
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, { $push: { experience: newExperience } }, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, { $push: { experience: newExperience } }, { new: true }).where('deleted').ne(true);
     if (!updatedUser) {
         res.status(404).send('Profile not found');
         return
@@ -62,7 +62,7 @@ export async function addExperience(req: Request, res: Response) {
 }
 
 export async function deleteExperience(req: Request, res: Response) {
-    const updated = await User.findByIdAndUpdate(req.params.id, { $pull: { experience: { _id: req.params.exp } } }, { new: true });
+    const updated = await User.findByIdAndUpdate(req.params.id, { $pull: { experience: { _id: req.params.exp } } }, { new: true }).where('deleted').ne(true);
     if (!updated) {
         res.status(404).send('Profile not found');
         return
@@ -73,7 +73,7 @@ export async function deleteExperience(req: Request, res: Response) {
 
 export async function addSkill(req: Request, res: Response) {
     const { skill } = req.body;
-    const updated = await User.findByIdAndUpdate(req.params.id, { $push: { skills: skill } }, { new: true });
+    const updated = await User.findByIdAndUpdate(req.params.id, { $push: { skills: skill } }, { new: true }).where('deleted').ne(true);
     if (!updated) {
         res.status(404).send('Profile not found');
         return
@@ -82,7 +82,7 @@ export async function addSkill(req: Request, res: Response) {
 }
 
 export async function deleteSkill(req: Request, res: Response) {
-    const updated = await User.findByIdAndUpdate(req.params.id, { $pull: { skills: req.params.skill } }, { new: true });
+    const updated = await User.findByIdAndUpdate(req.params.id, { $pull: { skills: req.params.skill } }, { new: true }).where('deleted').ne(true);
     if (!updated) {
         res.status(404).send('Profile not found');
         return
@@ -93,7 +93,7 @@ export async function deleteSkill(req: Request, res: Response) {
 
 export async function updateInformation(req: Request, res: Response) {
     const { bio, localisation, website } = req.body;
-    const updated = await User.findByIdAndUpdate(req.params.id, { information: { bio, localisation, website } }, { new: true });
+    const updated = await User.findByIdAndUpdate(req.params.id, { information: { bio, localisation, website } }, { new: true }).where('deleted').ne(true);
     if (!updated) {
         res.status(404).send('Profile not found');
         return
@@ -117,7 +117,7 @@ export async function addFriend(req: Request, res: Response) {
         req.params.id,
         { $addToSet: { friends: friendId } },
         { new: true }
-    ).populate('friends', 'name email _id');
+    ).where('deleted').ne(true).populate('friends', 'name email _id');
     if (!updatedUser) {
         res.status(404).send('Profile not found');
         return;
@@ -130,7 +130,7 @@ export async function removeFriend(req: Request, res: Response) {
         req.params.id,
         { $pull: { friends: req.params.friendId } },
         { new: true }
-    ).populate('friends', 'name email _id');
+    ).where('deleted').ne(true).populate('friends', 'name email _id');
     if (!updatedUser) {
         res.status(404).send('Profile not found');
         return;
