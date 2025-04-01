@@ -92,3 +92,39 @@ export async function updateInformation(req: Request, res: Response) {
 
     res.json(updated);
 }
+
+export async function getFriends(req: Request, res: Response) {
+    const profile = await User.findById(req.params.id).populate('friends', 'name email _id');
+    if (!profile) {
+        res.status(404).send('Profile not found');
+        return;
+    }
+    res.json(profile.friends);
+}
+
+export async function addFriend(req: Request, res: Response) {
+    const { friendId } = req.body;
+    const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        { $addToSet: { friends: friendId } },
+        { new: true }
+    ).populate('friends', 'name email _id');
+    if (!updatedUser) {
+        res.status(404).send('Profile not found');
+        return;
+    }
+    res.json(updatedUser.friends);
+}
+
+export async function removeFriend(req: Request, res: Response) {
+    const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        { $pull: { friends: req.params.friendId } },
+        { new: true }
+    ).populate('friends', 'name email _id');
+    if (!updatedUser) {
+        res.status(404).send('Profile not found');
+        return;
+    }
+    res.json(updatedUser.friends);
+}

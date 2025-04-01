@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getProfiles, getProfileById, createProfile, updateProfile, deleteProfile, addExperience, deleteExperience, addSkill, deleteSkill, updateInformation } from "./api/profiles/controller";
+import { getProfiles, getProfileById, createProfile, updateProfile, deleteProfile, addExperience, deleteExperience, addSkill, deleteSkill, updateInformation, getFriends, addFriend, removeFriend } from "./api/profiles/controller";
 
 export const router = Router();
 
@@ -32,3 +32,12 @@ router.delete('/profiles/:id/skills/:skill', deleteSkill);
 
 // PUT /profiles/:id/information : Mettre à jour les informations d'un profil
 router.put('/profiles/:id/information', updateInformation);
+
+// GET /profiles/:id/friends: Récupérer la liste des amis d'un profil
+router.get('/profiles/:id/friends', getFriends);
+
+// POST /profiles/:id/friends: Ajouter un ami à un profil
+router.post('/profiles/:id/friends', addFriend);
+
+// DELETE /profiles/:id/friends/:friendId: Supprimer un ami d'un profil
+router.delete('/profiles/:id/friends/:friendId', removeFriend);
