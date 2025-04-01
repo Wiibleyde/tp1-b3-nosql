@@ -33,7 +33,7 @@ export async function updateProfile(req: Request, res: Response) {
 }
 
 export async function deleteProfile(req: Request, res: Response) {
-    const deletedUser = await User.findByIdAndUpdate(req.params.id, { deleted: true }, { new: true });
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
     if (!deletedUser) {
         res.status(404).send('Profile not found');
         return
