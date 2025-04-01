@@ -2,7 +2,7 @@ FROM oven/bun:1 AS base
 WORKDIR /usr/src/app
 
 FROM base AS install
-COPY . . 
+COPY . .
 RUN bun install --frozen-lockfile
 
 FROM base AS prerelease
